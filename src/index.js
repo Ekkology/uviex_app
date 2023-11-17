@@ -1,17 +1,46 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React, { useState } from "react";
+import ReactDOM from "react-dom/client";
+import ThingSpeakData from "./ThingSpeakData";
+import Navbar from "./Navbar.jsx";
+import { StyledEngineProvider } from "@mui/material/styles";
+import SignUp from "./SignUp";
+import Loginn from "./Loginn";
+import Grafica from "./Grafica.jsx";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
+  const [showSignUp, setShowSignUp] = useState(true);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  const switchToLogin = () => {
+    setShowLogin(true);
+    setShowSignUp(false);
+  };
+
+  const switchToSignUp = () => {
+    setShowLogin(false);
+    setShowSignUp(true);
+  };
+
+  return (
+    <React.StrictMode>
+      <StyledEngineProvider injectFirst>
+        <Navbar />
+        
+        {isAuthenticated ? (
+          <>
+            <ThingSpeakData />
+          </>
+        ) : showLogin ? (
+          <Loginn onswitchToSignUp={switchToSignUp} setIsAuthenticated={setIsAuthenticated} />
+        ) : (
+          <SignUp onswitchToLogin={switchToLogin} onSwitchToLogin={switchToLogin} />
+        )}
+      </StyledEngineProvider>
+    </React.StrictMode>
+    
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
